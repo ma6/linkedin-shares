@@ -1,0 +1,86 @@
+/**
+ * Importer screen — Tools → LinkedIn Shares.
+ *
+ * Colours only where core gives no class; everything else leans on core's
+ * .widefat / .striped / .button so wp-admin dark schemes keep working.
+ */
+
+.lsi-filters {
+	margin: 1em 0;
+	padding: .75em 1em;
+	background: rgba( 127, 127, 127, .06 );
+	border: 1px solid rgba( 127, 127, 127, .25 );
+	border-radius: 3px;
+}
+
+.lsi-filters label {
+	display: inline-block;
+	margin-right: 1em;
+	white-space: nowrap;
+}
+
+.lsi-filters .description {
+	margin: .5em 0 0;
+}
+
+.lsi-count {
+	font-weight: 600;
+}
+
+.lsi-tablewrap {
+	overflow-x: auto;
+	max-width: 100%;
+}
+
+.lsi-table {
+	min-width: 720px;
+}
+
+.lsi-table td,
+.lsi-table th {
+	vertical-align: top;
+}
+
+.lsi-date a {
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+	text-decoration: none;
+}
+
+.lsi-preview {
+	max-width: 40em;
+}
+
+.lsi-badge {
+	display: inline-block;
+	margin-left: .35em;
+	padding: 0 .5em;
+	font-size: 11px;
+	line-height: 1.8;
+	border: 1px solid currentColor;
+	border-radius: 999px;
+	opacity: .7;
+	white-space: nowrap;
+}
+
+.lsi-table tr.lsi-done td,
+.lsi-table tr.lsi-done th {
+	opacity: .55;
+}
+
+.lsi-actions {
+	margin: 1.25em 0 .5em;
+}
+
+.lsi-actions label {
+	font-weight: 600;
+}
+
+.lsi-result-list {
+	margin-left: 1.5em;
+	list-style: disc;
+}
+
+.lsi-result-list code {
+	font-size: 11px;
+}

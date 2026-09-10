@@ -19,10 +19,11 @@ Every change here starts as a GitHub Issue before it is built, because a commit
 records what changed and only a ticket records what was asked for. Those issues
 are one person's own thread, not a public queue.
 
-**Issues are opened by the maintainer only.** An issue from outside will be
-closed without discussion — not a judgement of it, just that triage is work
-this project does not take on. If something here is broken, you have the source
-and the licence to fix it in your own copy, which is faster than waiting.
+**Issue creation is limited to repository collaborators** (GitHub interaction
+limits). That is not a judgement of anything you might report — it is that
+triage is work this project does not take on. If something here is broken, you
+have the source and the licence to fix it in your own copy, which is faster
+than waiting on anyone.
 
 ## Pull requests are not accepted
 
@@ -38,6 +39,8 @@ keep the GPL notice and the freedoms attached to it.
 
 ## Security
 
-If you find something with security consequences, an issue is fine — that is
-the one exception to "opened by the maintainer only". See "No support" for what
-it does and does not promise.
+If you find something with security consequences, use GitHub's **private
+vulnerability reporting** — the "Report a vulnerability" button under the
+repository's **Security** tab. That channel is open to everyone even though
+issue creation is not. See "No support" for what a report does and does not
+promise.

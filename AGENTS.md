@@ -20,7 +20,7 @@ inc/class-lsi-csv.php           the lenient parser + mojibake repair + paragraph
 inc/class-lsi-title.php         title: lsi_generate_title filter → AI Client → first-line heuristic → ''
 inc/class-lsi-settings.php      Settings → LinkedIn Import (4 options)
 inc/class-lsi-importer.php      wp_insert_post loop, block body, attribution line, URN dedupe
-inc/class-lsi-admin.php         Tools → LinkedIn Shares: upload / review / results
+inc/class-lsi-admin.php         Tools → LinkedIn Shares: upload (CSV or the export ZIP) / review / results
 assets/admin.css, assets/admin.js   review-table only, enqueued on our hook suffix
 uninstall.php                   delete the 4 options + leftover lsi_pending_* transients
 ```
@@ -67,8 +67,9 @@ absent.
 ## Before calling a change done
 
 1. `php -l` clean on every file.
-2. Upload a real `Shares_*.csv`: paragraphs rebuilt, umlauts and em-dashes and
-   emoji correct (no `Ã` / `â€` left), dates right, `¶` counts plausible.
+2. Upload a real `Shares_*.csv` **and** the whole export ZIP: both reach the
+   review table; paragraphs rebuilt, umlauts and em-dashes and emoji correct
+   (no `Ã` / `â€` left), dates right, `¶` counts plausible.
 3. Preselection matches "≥ 2 paragraphs, last 3 years"; "Apply filter"
    recomputes; hand ticks survive it.
 4. Import a couple; drafts have the original date, the block body, the

@@ -27,7 +27,7 @@ final class LSI_Admin {
 
 	const PAGE        = 'lsi-import';
 	const HOOK_SUFFIX = 'tools_page_lsi-import';
-	const MAX_BYTES   = 8388608; // 8 MB.
+	const MAX_BYTES   = 67108864; // 64 MB — the LinkedIn export ZIP. PHP's own upload limit is usually the real gate.
 	const TTL         = 7200;    // 2 hours.
 
 	/**
@@ -131,14 +131,46 @@ final class LSI_Admin {
 			);
 		}
 
-		echo '<p>' . esc_html__( 'Upload the "Shares" CSV from your LinkedIn data export (Settings → Data privacy → Get a copy of your data). You then pick which shares to import; nothing is created until you confirm.', 'linkedin-shares-importer' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Where to get the file', 'linkedin-shares-importer' ) . '</h2>';
+		echo '<ol class="lsi-steps">';
+		printf(
+			'<li>%s</li>',
+			wp_kses(
+				sprintf(
+					/* translators: %s: LinkedIn download-my-data URL. */
+					__( 'Open <a href="%s" target="_blank" rel="noreferrer noopener">LinkedIn → Data privacy → Get a copy of your data</a>.', 'linkedin-shares-importer' ),
+					'https://www.linkedin.com/mypreferences/d/download-my-data'
+				),
+				array( 'a' => array( 'href' => array(), 'target' => array(), 'rel' => array() ) )
+			)
+		);
+		printf(
+			'<li>%s</li>',
+			wp_kses(
+				__( 'Choose <strong>“Download larger data archive”</strong> (the complete export). <code>Shares_*.csv</code> is only in that one — the fast, file-by-file download does not include it.', 'linkedin-shares-importer' ),
+				array( 'strong' => array(), 'code' => array() )
+			)
+		);
+		echo '<li>' . esc_html__( 'LinkedIn emails you a ZIP within roughly 24 hours.', 'linkedin-shares-importer' ) . '</li>';
+		echo '<li>' . esc_html__( 'Upload that ZIP below as-is, or unzip it and upload Shares_*.csv from inside.', 'linkedin-shares-importer' ) . '</li>';
+		echo '</ol>';
+		echo '<p>' . esc_html__( 'You then pick which shares to import; nothing is created until you confirm.', 'linkedin-shares-importer' ) . '</p>';
 
 		echo '<form method="post" enctype="multipart/form-data">';
 		wp_nonce_field( 'lsi_upload' );
 		echo '<table class="form-table" role="presentation"><tbody><tr>';
-		echo '<th scope="row"><label for="lsi_csv">' . esc_html__( 'Shares CSV file', 'linkedin-shares-importer' ) . '</label></th>';
-		echo '<td><input type="file" name="lsi_csv" id="lsi_csv" accept=".csv,text/csv" required> ';
-		echo '<p class="description">' . esc_html__( 'Usually named Shares_00000000.csv. Maximum 8 MB.', 'linkedin-shares-importer' ) . '</p></td>';
+		echo '<th scope="row"><label for="lsi_csv">' . esc_html__( 'Archive or CSV', 'linkedin-shares-importer' ) . '</label></th>';
+		echo '<td><input type="file" name="lsi_csv" id="lsi_csv" accept=".zip,.csv,application/zip,text/csv" required> ';
+		printf(
+			'<p class="description">%s</p></td>',
+			esc_html(
+				sprintf(
+					/* translators: %s: server upload size limit, e.g. "2 MB". */
+					__( 'The LinkedIn export ZIP, or Shares_*.csv extracted from it. This server accepts uploads up to %s.', 'linkedin-shares-importer' ),
+					size_format( wp_max_upload_size() )
+				)
+			)
+		);
 		echo '</tr></tbody></table>';
 		submit_button( __( 'Upload and review', 'linkedin-shares-importer' ) );
 		echo '</form>';
@@ -417,9 +449,11 @@ final class LSI_Admin {
 	}
 
 	/**
-	 * Read and lightly validate the uploaded file.
+	 * Read and lightly validate the uploaded file. Accepts the raw
+	 * `Shares_*.csv` or the whole LinkedIn export ZIP, from which the shares
+	 * CSV is extracted.
 	 *
-	 * @return string|WP_Error File contents, or an error.
+	 * @return string|WP_Error CSV contents, or an error.
 	 */
 	private static function read_upload() {
 		if ( empty( $_FILES['lsi_csv'] ) || ! isset( $_FILES['lsi_csv']['tmp_name'] ) ) {
@@ -435,15 +469,27 @@ final class LSI_Admin {
 
 		$tmp  = $upload['tmp_name'];
 		$name = isset( $upload['name'] ) ? sanitize_file_name( wp_unslash( $upload['name'] ) ) : '';
+		$ext  = strtolower( (string) pathinfo( $name, PATHINFO_EXTENSION ) );
 
 		if ( ! is_uploaded_file( $tmp ) ) {
 			return new WP_Error( 'lsi_not_uploaded', __( 'The file could not be read.', 'linkedin-shares-importer' ) );
 		}
 		if ( (int) ( $upload['size'] ?? 0 ) > self::MAX_BYTES ) {
-			return new WP_Error( 'lsi_too_big', __( 'That file is larger than 8 MB.', 'linkedin-shares-importer' ) );
+			return new WP_Error(
+				'lsi_too_big',
+				sprintf(
+					/* translators: %s: human-readable size limit. */
+					__( 'That file is larger than %s.', 'linkedin-shares-importer' ),
+					size_format( self::MAX_BYTES )
+				)
+			);
 		}
-		if ( strtolower( (string) pathinfo( $name, PATHINFO_EXTENSION ) ) !== 'csv' ) {
-			return new WP_Error( 'lsi_not_csv', __( 'Please upload a .csv file.', 'linkedin-shares-importer' ) );
+		if ( ! in_array( $ext, array( 'csv', 'zip' ), true ) ) {
+			return new WP_Error( 'lsi_not_csv', __( 'Please upload the LinkedIn export ZIP or a .csv file.', 'linkedin-shares-importer' ) );
+		}
+
+		if ( 'zip' === $ext ) {
+			return self::csv_from_zip( $tmp );
 		}
 
 		$contents = file_get_contents( $tmp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
@@ -452,6 +498,73 @@ final class LSI_Admin {
 		}
 		if ( false === strpos( $contents, 'ShareCommentary' ) ) {
 			return new WP_Error( 'lsi_wrong_csv', __( 'That does not look like the LinkedIn "Shares" export (no ShareCommentary column).', 'linkedin-shares-importer' ) );
+		}
+
+		return $contents;
+	}
+
+	/**
+	 * Pull the shares CSV out of a LinkedIn export ZIP: `Shares_*.csv` /
+	 * `Shares.csv` by name, else the first `*.csv` that carries a
+	 * `ShareCommentary` column.
+	 *
+	 * @param string $zip_path Path to the uploaded ZIP.
+	 * @return string|WP_Error CSV contents, or an error.
+	 */
+	private static function csv_from_zip( string $zip_path ) {
+		if ( ! class_exists( 'ZipArchive' ) ) {
+			return new WP_Error(
+				'lsi_no_zip',
+				__( 'This server cannot read ZIP files. Unzip the export and upload Shares_*.csv instead.', 'linkedin-shares-importer' )
+			);
+		}
+
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $zip_path ) ) {
+			return new WP_Error( 'lsi_bad_zip', __( 'That ZIP file could not be opened.', 'linkedin-shares-importer' ) );
+		}
+
+		$named    = null;
+		$fallback = null;
+
+		for ( $i = 0; $i < $zip->numFiles; $i++ ) {
+			$entry = $zip->statIndex( $i );
+			if ( ! $entry || ! isset( $entry['name'] ) ) {
+				continue;
+			}
+			$base = strtolower( basename( $entry['name'] ) );
+			if ( '.csv' !== substr( $base, -4 ) ) {
+				continue;
+			}
+			if ( null === $named && preg_match( '/^shares(_\d+)?\.csv$/', $base ) ) {
+				$named = $i;
+				break;
+			}
+			if ( null === $fallback && (int) $entry['size'] <= self::MAX_BYTES ) {
+				$fallback = $i;
+			}
+		}
+
+		$index = $named ?? $fallback;
+		if ( null === $index ) {
+			$zip->close();
+			return new WP_Error( 'lsi_no_csv_in_zip', __( 'No Shares CSV was found inside that ZIP.', 'linkedin-shares-importer' ) );
+		}
+
+		$stat = $zip->statIndex( $index );
+		if ( $stat && (int) ( $stat['size'] ?? 0 ) > self::MAX_BYTES ) {
+			$zip->close();
+			return new WP_Error( 'lsi_zip_entry_big', __( 'The Shares CSV inside that ZIP is too large.', 'linkedin-shares-importer' ) );
+		}
+
+		$contents = $zip->getFromIndex( $index );
+		$zip->close();
+
+		if ( false === $contents || '' === $contents ) {
+			return new WP_Error( 'lsi_zip_read', __( 'The Shares CSV inside that ZIP could not be read.', 'linkedin-shares-importer' ) );
+		}
+		if ( false === strpos( $contents, 'ShareCommentary' ) ) {
+			return new WP_Error( 'lsi_wrong_csv', __( 'The CSV found inside that ZIP has no ShareCommentary column.', 'linkedin-shares-importer' ) );
 		}
 
 		return $contents;

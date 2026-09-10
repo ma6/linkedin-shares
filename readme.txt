@@ -3,18 +3,18 @@ Contributors: martingude
 Tested up to: 7.1
 Requires at least: 6.5
 Requires PHP: 8.0
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Import your LinkedIn data export (Shares_*.csv) as draft posts, dated to the original LinkedIn publish time.
+Import your LinkedIn data export as draft posts, dated to the original LinkedIn publish time.
 
 == Description ==
 
-You upload the "Shares" CSV from your LinkedIn data export, review a table of
-every share it contains, and tick the ones you want. Nothing is created until
-you confirm, and everything is created as a **draft** so you edit before
-publishing.
+You upload the LinkedIn export ZIP (or `Shares_*.csv` pulled out of it), review
+a table of every share it contains, and tick the ones you want. Nothing is
+created until you confirm, and everything is created as a **draft** so you edit
+before publishing.
 
 * **Sensible preselection.** Shares with two or more paragraphs, published in
   the last three years, are ticked by default. Change the date range and the
@@ -36,16 +36,21 @@ publishing.
 * **Messy export, handled.** LinkedIn's CSV double-quotes every paragraph,
   splits fields across physical lines, and is frequently mojibake
   (`Poga\xC3\x84\x8dar`). The parser repairs the encoding and rebuilds real
-  paragraphs.
+  paragraphs. Drop the whole export ZIP in and it finds `Shares_*.csv` for you.
 
 Self-contained: no dependency on any theme. The whole folder can move to its
 own repository unchanged.
 
-== Where to get the CSV ==
+== Where to get the file ==
 
-On LinkedIn: **Settings & Privacy → Data privacy → Get a copy of your data →
-"Posts"** (the archive contains `Shares_*.csv`). The full export can take up to
-24 hours to arrive.
+1. Open https://www.linkedin.com/mypreferences/d/download-my-data
+   (Settings & Privacy → Data privacy → Get a copy of your data).
+2. Choose **"Download larger data archive"** — the complete export.
+   `Shares_*.csv` is only in that one; the fast, file-by-file download does not
+   include it.
+3. LinkedIn emails you a ZIP within roughly 24 hours.
+4. Upload that ZIP as-is on Tools → LinkedIn Shares, or unzip it first and
+   upload `Shares_*.csv`.
 
 == How the body is built ==
 
@@ -84,6 +89,14 @@ transient; it leaves the drafts and their meta alone.
 * `MediaUrl` images are not downloaded — only the text is imported.
 
 == Changelog ==
+
+= 0.1.1 =
+* Import screen now spells out where the file comes from and links to
+  linkedin.com/mypreferences/d/download-my-data — the "larger data archive",
+  since Shares_*.csv is not in the fast partial export.
+* Accept the export ZIP directly and pull Shares_*.csv out of it; plain .csv
+  still works. Upload ceiling raised to 64 MB (PHP's own limit is shown and is
+  usually the real gate).
 
 = 0.1.0 =
 * Initial release: upload, review table with date-range and paragraph-count

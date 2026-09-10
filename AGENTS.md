@@ -1,9 +1,25 @@
 # AGENTS.md — LinkedIn Shares Importer
 
-A standalone WordPress plugin. It currently lives inside the `onygo.26`
-monorepo under `plugins/`, but it has **no dependency on the Onygo theme or on
-Neon** and is meant to be lifted into its own repository unchanged — keep it
-that way.
+A standalone WordPress plugin — its own repository since 2026-09-10, extracted
+from the `onygo.26` monorepo (`plugins/linkedin-shares-importer/`) with its
+history intact. **No dependency on any theme or on Neon** — keep it that way.
+
+## Workflow
+
+- **Issue-first.** Every change starts as a GitHub issue, written as a user
+  story, before any code. Every commit that answers it names the ticket in its
+  subject — `[#N] type(scope): summary` — and the commit that *finishes* the
+  issue ends its body with `Closes #N`. Check `gh issue list` and `git log`
+  before starting.
+- **Work on `main`.** Commit straight to `main`; branch only when something
+  genuinely cannot run there, and delete that branch (local **and** `origin`)
+  the moment it lands. `git fetch` before every push, then rebase — linear
+  history, no merge commits.
+- **Commit trailer.** End every commit message with
+  `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>`.
+- **Version bump in the same commit.** When a change ships, bump `LSI_VERSION`
+  (in `linkedin-shares-importer.php`), the plugin header `Version:`, and
+  `readme.txt` (`Stable tag` + a changelog entry) together.
 
 ## What it is
 
@@ -34,8 +50,9 @@ lines, and the file is usually mojibake (UTF-8 once decoded as Windows-1252).
 timestamp, peels `SharedUrl,MediaUrl,VISIBILITY` off the right, and repairs
 what's left. `fix_mojibake()` only swaps in a repaired string when it strictly
 reduces the tell-tale byte sequences and does not lose characters. If you touch
-the parser, re-check it against a real export and against the fixture notes in
-the repo's DECISIONS.md.
+the parser, re-check it against a real export — the tricky cases (multi-line
+quoted paragraphs, trailing-column split, mojibake vs. clean typography, emoji)
+are covered by the fixtures in the `[#74]`/`[#75]` history.
 
 ## Non-negotiables
 
@@ -78,5 +95,5 @@ absent.
    the settings screen says so.
 6. Keyboard only through the review table; no console errors; JS disabled still
    imports.
-7. Anything decided along the way goes in the repo's `DECISIONS.md` while the
-   plugin still lives in the monorepo.
+7. Any lasting decision is written down in the same commit — start a
+   `DECISIONS.md` if the reasoning outgrows the commit body.

@@ -3,7 +3,7 @@ Contributors: martingude
 Tested up to: 7.1
 Requires at least: 6.5
 Requires PHP: 8.0
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,10 @@ transient; it leaves the drafts and their meta alone.
 * `MediaUrl` images are not downloaded — only the text is imported.
 
 == Changelog ==
+
+= 0.1.2 =
+* Plugin URI points at the plugin's own repository.
+* Added LICENSE (GPL-2.0), README.md and CONTRIBUTING.md.
 
 = 0.1.1 =
 * Import screen now spells out where the file comes from and links to

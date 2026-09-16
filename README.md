@@ -33,7 +33,8 @@ file-by-file one, and it arrives by email within roughly 24 hours.
 > **Disclaimer:** the parser matches the `Shares_*.csv` format LinkedIn
 > exported as of September 2026. LinkedIn can change that format without
 > notice, and this plugin is maintained for the maintainer's own use — not
-> kept in step with LinkedIn's export on an ongoing basis.
+> kept in step with LinkedIn's export on an ongoing basis. If a future export
+> breaks it, feel free to fork and fix it.
 
 ## Documentation
 

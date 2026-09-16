@@ -90,8 +90,9 @@ transient; it leaves the drafts and their meta alone.
 * The parser matches the `Shares_*.csv` format LinkedIn exported as of
   September 2026. LinkedIn can change that format without notice; this plugin
   is maintained for the maintainer's own use, not kept in step with LinkedIn's
-  export on an ongoing basis. If a future export breaks the parser, open an
-  issue (or, per `CONTRIBUTING.md`, fix it in your own fork).
+  export on an ongoing basis. If a future export breaks the parser, feel free
+  to fork and fix it (see `CONTRIBUTING.md`) — issue creation here is limited
+  to repository collaborators.
 
 == Changelog ==
 

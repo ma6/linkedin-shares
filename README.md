@@ -13,16 +13,16 @@ draft. Re-running an overlapping import creates no duplicates.
 
 ## Install
 
-No release packages yet — build the ZIP from a checkout:
+Download `linkedin-shares-importer.zip` from the
+[latest release](https://github.com/ma6/linkedin-shares/releases/latest), then
+**Plugins → Add New → Upload Plugin**. Requires WordPress 6.5+ and PHP 8.0+.
+
+To build the ZIP from a checkout instead:
 
 ```bash
 git clone https://github.com/ma6/linkedin-shares.git linkedin-shares-importer
 zip -r linkedin-shares-importer.zip linkedin-shares-importer -x '.git/*'
 ```
-
-Then **Plugins → Add New → Upload Plugin**, or drop the
-`linkedin-shares-importer` folder into `wp-content/plugins/`. Requires
-WordPress 6.5+ and PHP 8.0+.
 
 ## Getting the LinkedIn file
 

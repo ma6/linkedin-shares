@@ -12,10 +12,10 @@
  * Text Domain:       linkedin-shares-importer
  * Update URI:        false
  *
- * Self-contained by design — no dependency on the Onygo theme or Neon, so the
- * whole `plugins/linkedin-shares-importer/` folder can be lifted into its own
- * repository unchanged. wp-admin is not a Neon surface: this plugin renders
- * with core's own admin styles and adds only a few rules for the review table.
+ * Self-contained by design — no dependency on any theme, so the whole
+ * `plugins/linkedin-shares-importer/` folder can be lifted into its own
+ * repository unchanged. This plugin renders with core's own admin styles
+ * and adds only a few rules for the review table.
  *
  * @package LinkedInSharesImporter
  */

@@ -1,8 +1,8 @@
 # AGENTS.md — LinkedIn Shares Importer
 
 A standalone WordPress plugin — its own repository since 2026-09-10, extracted
-from the `onygo.26` monorepo (`plugins/linkedin-shares-importer/`) with its
-history intact. **No dependency on any theme or on Neon** — keep it that way.
+from a private monorepo with its history intact. **No dependency on any
+theme** — keep it that way.
 
 ## Workflow
 
@@ -67,7 +67,7 @@ are covered by the fixtures in the `[#74]`/`[#75]` history.
   attribution template — the CSV is untrusted input.
 - **Capabilities + nonces.** Screen requires `import`; every POST branch calls
   `check_admin_referer`. Settings require `manage_options`.
-- **No hard theme dependency, no Neon.** wp-admin styling only; lean on core
+- **No hard theme dependency.** wp-admin styling only; lean on core
   `.widefat`/`.button` so admin dark schemes keep working.
 - **Degrades without JavaScript.** The select-all is an enhancement; both form
   buttons carry their own `lsi_action` value, so import and filter work with JS

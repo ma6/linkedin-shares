@@ -3,7 +3,7 @@ Contributors: martingude
 Tested up to: 7.1
 Requires at least: 6.5
 Requires PHP: 8.0
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -87,8 +87,17 @@ transient; it leaves the drafts and their meta alone.
 * Import runs synchronously. A very large selection on a slow host can hit the
   PHP time limit; import in a couple of batches if so.
 * `MediaUrl` images are not downloaded — only the text is imported.
+* The parser matches the `Shares_*.csv` format LinkedIn exported as of
+  September 2026. LinkedIn can change that format without notice; this plugin
+  is maintained for the maintainer's own use, not kept in step with LinkedIn's
+  export on an ongoing basis. If a future export breaks the parser, open an
+  issue (or, per `CONTRIBUTING.md`, fix it in your own fork).
 
 == Changelog ==
+
+= 0.1.3 =
+* Documented that the CSV parser matches LinkedIn's export format as of
+  September 2026 and is not maintained to track future changes to it.
 
 = 0.1.2 =
 * Plugin URI points at the plugin's own repository.

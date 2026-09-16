@@ -30,6 +30,11 @@ zip -r linkedin-shares-importer.zip linkedin-shares-importer -x '.git/*'
 data archive"**. `Shares_*.csv` is only in that complete export, not the fast
 file-by-file one, and it arrives by email within roughly 24 hours.
 
+> **Disclaimer:** the parser matches the `Shares_*.csv` format LinkedIn
+> exported as of September 2026. LinkedIn can change that format without
+> notice, and this plugin is maintained for the maintainer's own use — not
+> kept in step with LinkedIn's export on an ongoing basis.
+
 ## Documentation
 
 - [`AGENTS.md`](AGENTS.md) — how the plugin is built and the rules that govern

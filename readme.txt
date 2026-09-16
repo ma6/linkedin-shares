@@ -3,7 +3,7 @@ Contributors: martingude
 Tested up to: 7.1
 Requires at least: 6.5
 Requires PHP: 8.0
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ transient; it leaves the drafts and their meta alone.
   to repository collaborators.
 
 == Changelog ==
+
+= 0.1.4 =
+* Removed references to the private monorepo/theme this plugin was
+  extracted from; no change in behavior.
 
 = 0.1.3 =
 * Documented that the CSV parser matches LinkedIn's export format as of

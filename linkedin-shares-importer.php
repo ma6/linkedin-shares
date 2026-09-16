@@ -3,7 +3,7 @@
  * Plugin Name:       LinkedIn Shares Importer
  * Plugin URI:        https://github.com/ma6/linkedin-shares
  * Description:       Import your LinkedIn data export as draft posts, dated to the original LinkedIn publish time. Upload the export ZIP (or Shares_*.csv from it), review a table of every share, and pick which ones to import — shares with two or more paragraphs from the last three years are preselected. Titles are generated with the WordPress AI Client when a provider is connected (Settings → Connections), otherwise the draft is left needing a title. An optional "Originally posted on LinkedIn" line is appended to each post.
- * Version:           0.1.3
+ * Version:           0.1.4
  * Requires at least: 6.5
  * Requires PHP:      8.0
  * Author:            Martin Gude
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LSI_VERSION', '0.1.3' );
+define( 'LSI_VERSION', '0.1.4' );
 define( 'LSI_FILE', __FILE__ );
 define( 'LSI_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LSI_URL', plugin_dir_url( __FILE__ ) );
